@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "Graphics/Renderer.h"
 #include <memory>
 
 namespace Engine {
@@ -18,6 +19,7 @@ namespace Engine {
 	private:
 		// Private members
 		std::unique_ptr<Window> window;
+		std::unique_ptr<Graphics::Renderer> renderer;
 		bool active = true;
 
 		// Private methods

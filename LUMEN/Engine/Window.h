@@ -45,6 +45,7 @@ namespace Engine {
         void Hide() const;
         void Update();
         void Resize(int width, int height);
+        void Center();
         void Move(int x, int y);
         void SetTitle(const wchar_t* title);
         void SetIcon(HICON hIcon);
@@ -63,6 +64,11 @@ namespace Engine {
 
         // Getters
         HWND GetHandle() const { return hWnd; }
+        RECT GetWindowRect() const { 
+			RECT rect;
+            ::GetWindowRect(hWnd, &rect);
+            return rect;
+        }
         int GetWidth() const { return width; }
         int GetHeight() const { return height; }
 

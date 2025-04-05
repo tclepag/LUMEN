@@ -23,8 +23,17 @@ namespace Engine {
 			window = std::make_unique<Window>(wc.lpszClassName, SW_SHOW);
 			window->SetTitle(L"LUMEN");
 			window->SetSize(1024, 768);
+			window->Center();
 			window->Show();
 			window->Update();
+
+			// Create renderer
+			renderer = std::make_unique<Graphics::Renderer>(window.get());
+			if (!renderer->Initialize()) {
+				throw std::runtime_error("Failed to initialize renderer");
+			}
+			renderer->Resize();
+
 			return true;
 		}
 		catch (const std::exception& e) {
@@ -46,7 +55,10 @@ namespace Engine {
 	}
 
 	void Core::Update() {} // TODO: Implement update method
-	void Core::Render() {}
+	void Core::Render() {
+		renderer->BeginRender();
+		renderer->EndRender();
+	}
 
 	void Core::Shutdown() {
 		// Set core state to inactive
@@ -54,6 +66,10 @@ namespace Engine {
 
 		// Destroy window
 		if (window) {
+			window.reset();
+		}
+		// Destroy renderer
+		if (renderer) {
 			window.reset();
 		}
 		// Unregister window class

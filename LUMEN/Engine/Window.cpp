@@ -81,6 +81,13 @@ namespace Engine {
         UpdateWindowPos();
     }
 
+	void Window::Center() {
+        RECT rect = GetWindowRect();
+		int centerX = (GetSystemMetrics(SM_CXSCREEN) - (rect.right - rect.left)) / 2;
+		int centerY = (GetSystemMetrics(SM_CYSCREEN) - (rect.bottom - rect.top)) / 2;
+		Move(centerX, centerY);
+	}
+
     void Window::Move(int x, int y) {
         SetWindowPosition(x, y);
         UpdateWindowPos();
