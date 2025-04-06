@@ -57,6 +57,13 @@ namespace Graphics {
 		BuildRasterizer();
 		// Create blend state
 		BuildBlendState();
+
+
+		// Redraw the window when sizing
+		win->AddMessageHook(WM_SIZE, [this](HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+			Resize();
+			return 0;
+			});
 	}
 
 	void Renderer::BeginRender() {
@@ -69,6 +76,8 @@ namespace Graphics {
 
 	void Renderer::Resize() {
 		ResizeSwapChain();
+		BeginRender();
+		EndRender();
 	}
 
 	void Renderer::Shutdown() {

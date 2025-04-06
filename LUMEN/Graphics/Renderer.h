@@ -31,6 +31,8 @@ namespace Graphics {
 		ComPtr<ID3D11DepthStencilView> depthStencilView;
 		D3D11_VIEWPORT viewport;
 
+		int resizeDrawPerSecond = 150;
+
 		// Private methods
 		void BuildViewport();
 		void BuildRenderTarget();

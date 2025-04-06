@@ -42,6 +42,7 @@
     <ClCompile Include="Resources\Buffers\ConstantBuffer.cpp" />
     <ClCompile Include="Resources\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="Resources\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="Resources\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Audio\.gitkeep" />
