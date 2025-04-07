@@ -60,6 +60,15 @@
     <ClInclude Include="Resources\PixelShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdParty\Net\include\nethost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\Net\include\hostfxr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\Net\include\coreclr_delegates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LUMEN.rc">
@@ -121,5 +130,9 @@
     <None Include="Bin\nethost.dll" />
     <None Include="ThirdParty\Net\include\.gitkeep" />
     <None Include="ThirdParty\Net\lib\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ThirdParty\Net\lib\nethost.lib" />
+    <Library Include="ThirdParty\Net\lib\libnethost.lib" />
   </ItemGroup>
 </Project>

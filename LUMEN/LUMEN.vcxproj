@@ -32,6 +32,9 @@
     <ClInclude Include="Resources\Buffers\VertexBuffer.h" />
     <ClInclude Include="Resources\PixelShader.h" />
     <ClInclude Include="Resources\VertexShader.h" />
+    <ClInclude Include="ThirdParty\Net\include\coreclr_delegates.h" />
+    <ClInclude Include="ThirdParty\Net\include\hostfxr.h" />
+    <ClInclude Include="ThirdParty\Net\include\nethost.h" />
     <ClInclude Include="Utils\GeometryTypes.h" />
     <ClInclude Include="Utils\WinLibraries.h" />
   </ItemGroup>
@@ -73,6 +76,10 @@
     <None Include="ThirdParty\Net\lib\.gitkeep" />
     <None Include="UI\.gitkeep" />
     <None Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ThirdParty\Net\lib\libnethost.lib" />
+    <Library Include="ThirdParty\Net\lib\nethost.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

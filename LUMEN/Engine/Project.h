@@ -1,25 +1,31 @@
 #pragma once
-
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <functional>
-#include <memory>
-
 #include "NetRuntime.h"
+#include <memory>
+#include <string>
 
 namespace Engine {
-	class Project {
-	public:
-		Project();
-		~Project() = default;
-		void Init();
-		void Run();
-		void Update();
-		void Render();
-		void Shutdown();
-	private:
-		std::unique_ptr<NetRuntime> netRuntime;
-		void* gameInstance = nullptr;
-	};
+    class Project {
+    public:
+        Project();
+        ~Project() = default;
+
+        // Main lifecycle methods
+        bool Init();
+        bool Run();
+        bool Update();
+        bool Render();
+        bool Shutdown();
+
+        // Diagnostics
+        bool DumpAssemblyInfo();
+
+    private:
+        std::unique_ptr<NetRuntime> netRuntime;
+        void* gameInstance = nullptr;
+
+        // Helper methods for .NET operations
+        bool LoadAssembly(const std::wstring& assemblyPath, const std::wstring& configPath);
+        bool CreateGameInstance();
+        bool CallGameMethod(const std::wstring& methodName, int* result = nullptr);
+    };
 }

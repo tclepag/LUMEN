@@ -2,91 +2,70 @@
 {
     public class Game
     {
-        // Fields
-        private bool isLoaded;
-        private bool isRunning;
-
-        // Factory
+        // Static factory method for instance creation
         public static Game CreateInstance()
         {
             return new Game();
         }
 
-        // Constructor
-        public Game()
+        // Static method for initial testing
+        public static int Hello()
         {
-            isLoaded = false;
-            isRunning = false;
-            Console.WriteLine("Game instance created.");
+            return 42; // Return a value to confirm it works
         }
 
-        // Methods
+        // Optional diagnostic method
+        public static string GetTypeInfo()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            var assembly = typeof(Game).Assembly;
+            sb.AppendLine($"Assembly: {assembly.FullName}");
+
+            foreach (var type in assembly.GetTypes())
+            {
+                sb.AppendLine($"Type: {type.FullName}");
+                foreach (var method in type.GetMethods())
+                {
+                    sb.AppendLine($"  Method: {method.Name} - Is Static: {method.IsStatic}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        // Instance methods
         public int Initialize()
         {
-            if (isLoaded)
-            {
-                Console.WriteLine("Game already initialized.");
-                return -1; // Return -1 if already initialized
-            }
-            Console.WriteLine("Game initialized!");
-            // Add initialization logic here
-
-            isLoaded = true;
-            return 0; // Return 0 on success
+            return 0;
         }
+
         public int Start()
         {
-            if (!isLoaded)
-            {
-                Console.WriteLine("Game not initialized. Please initialize the game first.");
-                return -1; // Return -1 if not initialized
-            }
-            if (isRunning)
-            {
-                Console.WriteLine("Game already started.");
-                return -1; // Return -1 if already started
-            }
-            Console.WriteLine("Game started!");
-            // Add game logic here
-            isRunning = true;
-            return 0; // Return 0 on success
+            return 0;
         }
 
         public int Update()
         {
-            if (!isRunning)
-            {
-                Console.WriteLine("Game not running. Please start the game first.");
-                return -1; // Return -1 if not running
-            }
-            Console.WriteLine("Game updated!");
-            // Add update logic here
-            return 0; // Return 0 on success
+            return 0;
         }
 
         public int Render()
         {
-            if (!isRunning)
-            {
-                Console.WriteLine("Game not running. Please start the game first.");
-                return -1; // Return -1 if not running
-            }
-            Console.WriteLine("Game rendered!");
-            // Add rendering logic here
-            return 0; // Return 0 on success
+            return 0;
         }
 
-        public int Stop()
+        public int Shutdown()
         {
-            if (!isRunning)
-            {
-                Console.WriteLine("Game not running. Please start the game first.");
-                return -1; // Return -1 if not running
-            }
-            Console.WriteLine("Game stopped!");
-            // Add cleanup logic here
-            isRunning = false;
-            return 0; // Return 0 on success
+            return 0;
+        }
+    }
+
+    // Optional diagnostics class
+    public class Diagnostics
+    {
+        public static string GetAssemblyInfo()
+        {
+            return Game.GetTypeInfo();
         }
     }
 }
