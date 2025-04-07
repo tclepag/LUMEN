@@ -17,17 +17,45 @@ namespace Engine {
         m_AssemblyPath = assemblyPath;
 
         // Get hostfxr path
+        // Get hostfxr path
         std::wstring hostFxrPath;
         if (!GetHostFxrPath(hostFxrPath)) {
-            std::cerr << "Failed to get hostfxr path" << std::endl;
+			DWORD errorCode = GetLastError();
+			LPVOID errorMsg;
+			FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+				NULL,
+				errorCode,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+				(LPWSTR)&errorMsg,
+				0,
+				NULL
+			);
+			std::wstring errorMessage = L"Failed to get hostfxr path: " + std::to_wstring(errorCode) + L" - " + (LPWSTR)errorMsg;
+			OutputDebugStringW(errorMessage.c_str());
+			LocalFree(errorMsg);
             return false;
         }
 
         // Load hostfxr library
         if (!LoadHostFxr(hostFxrPath)) {
-            std::cerr << "Failed to load hostfxr" << std::endl;
+            DWORD errorCode = GetLastError();
+            LPVOID errorMsg;
+            FormatMessage(
+                FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL,
+                errorCode,
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPWSTR)&errorMsg,
+                0,
+                NULL
+            );
+			std::wstring errorMessage = L"Failed to load hostfxr: " + std::to_wstring(errorCode) + L" - " + (LPWSTR)errorMsg;
+			OutputDebugStringW(errorMessage.c_str());
+            LocalFree(errorMsg);
             return false;
         }
+
 
         // Get function pointers
         auto init_fptr = (hostfxr_initialize_for_runtime_config_fn)GetProcAddress(
@@ -43,14 +71,40 @@ namespace Engine {
             "hostfxr_close");
 
         if (!init_fptr || !get_delegate_fptr || !close_fptr) {
-            std::cerr << "Failed to get hostfxr function pointers" << std::endl;
+			DWORD errorCode = GetLastError();
+			LPVOID errorMsg;
+			FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+				NULL,
+				errorCode,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+				(LPWSTR)&errorMsg,
+				0,
+				NULL
+			);
+			std::wstring errorMessage = L"Failed to get function pointers: " + std::to_wstring(errorCode) + L" - " + (LPWSTR)errorMsg;
+			OutputDebugStringW(errorMessage.c_str());
+			LocalFree(errorMsg);
             return false;
         }
 
         // Initialize runtime using config
         int rc = init_fptr(runtimeConfigPath.c_str(), nullptr, &m_HostContext);
         if (rc != 0 || m_HostContext == nullptr) {
-            std::cerr << "Failed to initialize hostfxr: " << rc << std::endl;
+            DWORD errorCode = GetLastError();
+            LPVOID errorMsg;
+            FormatMessage(
+                FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL,
+                errorCode,
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPWSTR)&errorMsg,
+                0,
+                NULL
+            );
+            std::wstring errorMessage = L"Failed to get function pointers: " + std::to_wstring(errorCode) + L" - " + (LPWSTR)errorMsg;
+            OutputDebugStringW(errorMessage.c_str());
+            LocalFree(errorMsg);
             return false;
         }
 
@@ -61,7 +115,20 @@ namespace Engine {
             (void**)&m_LoadAssembly);
 
         if (rc != 0 || m_LoadAssembly == nullptr) {
-            std::cerr << "Failed to get function pointer loader: " << rc << std::endl;
+            DWORD errorCode = GetLastError();
+            LPVOID errorMsg;
+            FormatMessage(
+                FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL,
+                errorCode,
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPWSTR)&errorMsg,
+                0,
+                NULL
+            );
+            std::wstring errorMessage = L"Failed to get function pointers: " + std::to_wstring(errorCode) + L" - " + (LPWSTR)errorMsg;
+            OutputDebugStringW(errorMessage.c_str());
+            LocalFree(errorMsg);
             close_fptr(m_HostContext);
             m_HostContext = nullptr;
             return false;
@@ -70,6 +137,65 @@ namespace Engine {
         m_Initialized = true;
         return true;
     }
+
+    template<typename T>
+    bool NetRuntime::LoadMethod(const std::wstring& typeName, const std::wstring& methodName,
+        const std::wstring& delegateTypeName, T* methodDelegate) {
+        if (!m_Initialized || m_LoadAssembly == nullptr) {
+            OutputDebugStringA("Runtime not initialized or LoadAssembly function pointer is null\n");
+            return false;
+        }
+
+        int rc = m_LoadAssembly(
+            m_AssemblyPath.c_str(),
+            typeName.c_str(),
+            methodName.c_str(),
+            delegateTypeName.c_str(),
+            nullptr,
+            (void**)methodDelegate);
+
+        if (rc != 0 || *methodDelegate == nullptr) {
+            std::string errorMsg = "Failed to load method: " + std::string(methodName.begin(), methodName.end()) +
+                                   " of type: " + std::string(typeName.begin(), typeName.end()) +
+                                   " with HRESULT: " + std::to_string(rc) + "\n";
+            OutputDebugStringA(errorMsg.c_str());
+            return false;
+        }
+
+        return true;
+    }
+
+	template<typename RETURN, typename... ARGS>
+	bool NetRuntime::LoadAndCallMethod(void* instance, const std::wstring& typeName, const std::wstring& methodName, RETURN* result, ARGS... args) {
+		if (!m_Initialized || m_LoadAssembly == nullptr) {
+			return false;
+		}
+		// Load the method
+		using MethodDelegate = RETURN(*)(void*, ARGS...);
+		MethodDelegate methodDelegate = nullptr;
+		if (!LoadMethod(typeName, methodName, L"System.Func`1[System.Int32]", &methodDelegate)) {
+			return false;
+		}
+		// Call the method
+		*result = methodDelegate(instance, args...);
+		return true;
+	}
+
+    template <typename T>
+    bool NetRuntime::CreateInstance(const std::wstring& typeName, T** instance) {
+        // Load factory method
+        using FactoryDelegate = void* (*)();
+        FactoryDelegate factory = nullptr;
+
+        if (!LoadMethod(typeName, L"CreateInstance", L"System.Func`1[LSHARP.Game]", &factory)) {
+            OutputDebugStringA("Failed to load factory method\n");
+            return false;
+        }
+
+        *instance = static_cast<T*>(factory());
+        return *instance != nullptr;
+    }
+
 
     void NetRuntime::Shutdown() {
         if (m_HostContext != nullptr) {
@@ -107,4 +233,7 @@ namespace Engine {
         HMODULE lib = LoadLibraryW(hostFxrPath.c_str());
         return (lib != nullptr);
     }
+
+    template bool NetRuntime::LoadAndCallMethod<int>(void* instance, const std::wstring& typeName, const std::wstring& methodName, int* result);
+    template bool NetRuntime::CreateInstance<void>(const std::wstring& typeName, void** instance);
 }

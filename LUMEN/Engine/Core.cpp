@@ -27,12 +27,20 @@ namespace Engine {
 			window->Show();
 			window->Update();
 
+			// Create project class
+			project = std::make_unique<Project>();
+			project->Init();
+
 			// Create renderer
 			renderer = std::make_unique<Graphics::Renderer>(window.get());
 			if (!renderer->Initialize()) {
 				throw std::runtime_error("Failed to initialize renderer");
 			}
 			renderer->Resize();
+
+			// Register window with renderer
+			uint32_t id = WindowManager::RegisterWindow(window.get(), renderer.get());
+			WindowManager::SetMainWindow(id);
 
 			return true;
 		}

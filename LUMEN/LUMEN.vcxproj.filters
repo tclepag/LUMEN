@@ -45,9 +45,6 @@
     <ClInclude Include="Resources\Buffers\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resources\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WindowManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,13 +54,10 @@
     <ClInclude Include="Engine\NetRuntime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\Net\include\coreclr_delegates.h">
+    <ClInclude Include="Resources\VertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdParty\Net\include\hostfxr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThirdParty\Net\include\nethost.h">
+    <ClInclude Include="Resources\PixelShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -94,9 +88,6 @@
     <ClCompile Include="Resources\Buffers\ConstantBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\WindowManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,6 +98,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Project.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\PixelShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -120,8 +117,9 @@
     <None Include="UI\.gitkeep" />
     <None Include="Content\.gitkeep" />
     <None Include="Config\.gitkeep" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="ThirdParty\Net\lib\libnethost.lib" />
+    <None Include="..\..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\9.0.3\runtimes\win-x64\native\nethost.dll" />
+    <None Include="Bin\nethost.dll" />
+    <None Include="ThirdParty\Net\include\.gitkeep" />
+    <None Include="ThirdParty\Net\lib\.gitkeep" />
   </ItemGroup>
 </Project>

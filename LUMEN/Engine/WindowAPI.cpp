@@ -11,7 +11,7 @@ extern "C" {
 		Renderer* renderer = new Renderer(window);
 		if (!renderer->Initialize()) {
 			MessageBoxA(nullptr, "Failed to initialize renderer", "Error", MB_ICONERROR);
-			return;
+			return 0;
 		}
 		renderer->Resize();
 		return WindowManager::RegisterWindow(window, renderer);

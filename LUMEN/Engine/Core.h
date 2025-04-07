@@ -2,6 +2,8 @@
 
 #include "Window.h"
 #include "Graphics/Renderer.h"
+#include "Project.h"
+#include "WindowManager.h"
 #include <memory>
 
 namespace Engine {
@@ -20,6 +22,7 @@ namespace Engine {
 		// Private members
 		std::unique_ptr<Window> window;
 		std::unique_ptr<Graphics::Renderer> renderer;
+		std::unique_ptr<Project> project;
 		bool active = true;
 
 		// Private methods

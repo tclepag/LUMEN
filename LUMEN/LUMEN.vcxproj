@@ -30,10 +30,8 @@
     <ClInclude Include="Resources\Buffers\ConstantBuffer.h" />
     <ClInclude Include="Resources\Buffers\IndexBuffer.h" />
     <ClInclude Include="Resources\Buffers\VertexBuffer.h" />
-    <ClInclude Include="Resources\Shader.h" />
-    <ClInclude Include="ThirdParty\Net\include\coreclr_delegates.h" />
-    <ClInclude Include="ThirdParty\Net\include\hostfxr.h" />
-    <ClInclude Include="ThirdParty\Net\include\nethost.h" />
+    <ClInclude Include="Resources\PixelShader.h" />
+    <ClInclude Include="Resources\VertexShader.h" />
     <ClInclude Include="Utils\GeometryTypes.h" />
     <ClInclude Include="Utils\WinLibraries.h" />
   </ItemGroup>
@@ -52,21 +50,29 @@
     <ClCompile Include="Resources\Buffers\ConstantBuffer.cpp" />
     <ClCompile Include="Resources\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="Resources\Buffers\VertexBuffer.cpp" />
-    <ClCompile Include="Resources\Shader.cpp" />
+    <ClCompile Include="Resources\PixelShader.cpp" />
+    <ClCompile Include="Resources\VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\9.0.3\runtimes\win-x64\native\nethost.dll" />
     <None Include="Audio\.gitkeep" />
+    <None Include="Bin\nethost.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <DeploymentContent>false</DeploymentContent>
+    </None>
     <None Include="Config\.gitkeep" />
     <None Include="Content\.gitkeep" />
     <None Include="Input\.gitkeep" />
     <None Include="Resources\.gitkeep" />
     <None Include="Scripting\.gitkeep" />
     <None Include="Tests\.gitkeep" />
+    <None Include="ThirdParty\Net\include\.gitkeep" />
+    <None Include="ThirdParty\Net\lib\.gitkeep" />
     <None Include="UI\.gitkeep" />
     <None Include="vcpkg.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="ThirdParty\Net\lib\libnethost.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -121,14 +127,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>false</CopyLocalProjectReference>
     <CopyCppRuntimeToOutputDir>false</CopyCppRuntimeToOutputDir>
+    <OutDir>$(SolutionDir)$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalDeploymentContent>false</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>false</CopyLocalProjectReference>
     <CopyCppRuntimeToOutputDir>false</CopyCppRuntimeToOutputDir>
+    <OutDir>$(SolutionDir)$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
@@ -143,8 +157,15 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib;ThirdParty/Net/lib/nethost.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Bin\*.*" "$(SolutionDir)$(Configuration)" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -160,8 +181,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib;ThirdParty/Net/lib/nethost.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Bin\*.*" "$(SolutionDir)$(Configuration)" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -175,8 +203,15 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib;ThirdParty/Net/lib/nethost.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Bin\*.*" "$(SolutionDir)$(Configuration)" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -194,8 +229,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;User32.lib;Gdi32.lib;ThirdParty/Net/lib/libnethost.lib;ThirdParty/Net/lib/nethost.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Bin\*.*" "$(SolutionDir)$(Configuration)" /Y /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

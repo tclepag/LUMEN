@@ -11,7 +11,7 @@
 namespace Engine {
 	class Project {
 	public:
-		Project() = default;
+		Project();
 		~Project() = default;
 		void Init();
 		void Run();
@@ -20,5 +20,6 @@ namespace Engine {
 		void Shutdown();
 	private:
 		std::unique_ptr<NetRuntime> netRuntime;
+		void* gameInstance = nullptr;
 	};
 }
