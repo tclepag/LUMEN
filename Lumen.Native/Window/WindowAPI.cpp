@@ -28,6 +28,7 @@ extern "C" {
 
        // Try building window
        try {
+           std::cout << "BUILDING" << std::endl;
            return window->Fenestrate(winInfo);
        }
        catch (const std::exception& e) {
@@ -50,10 +51,29 @@ extern "C" {
        }
    }
 
-   __declspec(dllexport) bool __cdecl Native_ProcessWindowMessages(Window* window) {
+   __declspec(dllexport) int __cdecl Native_ProcessWindowMessages(Window* window) {
        // Try processing message
        try {
+           if (!window) {
+               std::cerr << "FAILED TO PROCESS NO WINDOW FOUND" << std::endl;
+               return -1;
+           }
            window->ProcessMessages();
+           if (window->WantsToClose()) {
+               return 0;
+           }
+           return 1;
+       }
+       catch (const std::exception& e) {
+           // C++ error occurred, return -1
+           std::cerr << e.what() << std::endl;
+           return -1;
+       }
+   }
+   bool __cdecl Native_CloseWindow(Window* window)
+   {
+       try {
+           window->Close();
            return true;
        }
        catch (const std::exception& e) {

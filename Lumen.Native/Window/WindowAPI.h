@@ -24,7 +24,8 @@ extern "C" {
 	__declspec(dllexport) void __cdecl Native_DestroyWindow(Window* window);
 
 	// Window lifecycle methods
-	__declspec(dllexport) bool __cdecl Native_BuildWindow(Window* window,const  CWNINFO* windowInfo);
+	__declspec(dllexport) bool __cdecl Native_BuildWindow(Window* window, const CWNINFO* windowInfo);
     __declspec(dllexport) bool __cdecl Native_DemolishWindow(Window* window);
-    __declspec(dllexport) bool __cdecl Native_ProcessWindowMessages(Window* window);
+    __declspec(dllexport) int __cdecl Native_ProcessWindowMessages(Window* window);
+    __declspec(dllexport) bool __cdecl Native_CloseWindow(Window* window);
 }

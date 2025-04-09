@@ -51,6 +51,7 @@ public:
 	bool Fenestrate(WNINFO& windowInfo); // Provides a new window by class name
 	void Demolish(); // Destroys window hardware and info
 	void ProcessMessages(); // Processes any queued window events
+	void Close(); // Signals the window that it wants to close
 
 	// Window methods
 
@@ -69,11 +70,13 @@ public:
 	const int GetWindowPosX() const { return win->posX; }
 	const int GetWindowPosY() const { return win->posY; }
 	const int GetWindowCmd() const { return win->show; }
-	const UINT GetWindowMsgType() const { return msg.message; }
+	const UINT GetWindowMsgType() const { return msg; }
+	bool WantsToClose() const { return wantsToClose; } // Returns if the window wants to close
 private:
 	// Window core members
 
 	WNINFO* win; // Window info
 	HWND hWnd; // Window hardware
-	MSG msg; // Window event message
+	UINT msg; // Window event message
+	bool wantsToClose = false; // Close signal
 };

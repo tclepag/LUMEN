@@ -11,6 +11,14 @@ wstring Window::CreateWinClass(const WNCLASS& windowClass) {
 	win.hIcon = windowClass.icon;
 	win.hIconSm = windowClass.smallIcon;
 	win.style = windowClass.style;
+	win.hCursor = LoadCursor(NULL, IDC_ARROW);
+	win.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+
+	if (!RegisterClassEx(&win)) {
+		DWORD err = GetLastError();
+		std::cerr << "Failed to create window class: " << err << std::endl;
+	}
+
 	return win.lpszClassName;
 }
 
@@ -42,10 +50,22 @@ LRESULT Window::WindowProcedure(
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 
+	pThis->msg = uMsg;
+
 	// Handle window procedures here
 	switch (uMsg) {
+		case WM_CLOSE: {
+			// C# will handle closing, prevent windows from destroying the window
+			pThis->Close();
+			return 0;
+		}
+		case WM_QUIT: {
+			std::cerr << "QUIT CALLED" << std::endl;
+			return 0;
+		}
 		case WM_DESTROY: {
 			pThis->Demolish();
+			PostQuitMessage(0);
 			return 0; // We don't want windows to handle this event
 		}
 		// Add more messages here
@@ -72,9 +92,14 @@ bool Window::Fenestrate(WNINFO& windowInfo) {
 		lpwcx
 	);
 
-	// If no window class was found, return false
+	// If no window class was found, create one
 	if (!classExists) {
-		return false;
+		WNCLASS klass{};
+		klass.className = windowInfo.className;
+		CreateWinClass(klass);
+		if (windowInfo.className) {
+			wprintf(L"Creating a new class cause: %s doesn't exist\n", windowInfo.className);
+		}
 	}
 
 	// Create window hardware
@@ -89,18 +114,24 @@ bool Window::Fenestrate(WNINFO& windowInfo) {
 		windowInfo.height,
 		windowInfo.parent,
 		windowInfo.menu,
-		lpwcx->hInstance,
+		GetModuleHandle(nullptr),
 		this
 	);
 
 	// If the hardware failed to create, return false
 	if (!hWnd) {
+		DWORD err = GetLastError();
+		std::cerr << "Failed to create window: " << err << std::endl;
 		return false;
 	}
 
 	// Set member window info to the create info
 	win = &windowInfo;
 
+	SetWindowCmd(SW_SHOWNORMAL);
+	UpdateWindow(hWnd);
+
+	std::cerr << "Successfully built window" << std::endl;
 	// We successfully initialized, return true
 	return true;
 }
@@ -111,11 +142,22 @@ void Window::Demolish() {
 }
 
 void Window::ProcessMessages() {
-	MSG msg;
-	while (GetMessage(&msg, hWnd, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	try {
+		MSG msg;
+		if (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
+	catch (const std::exception& e) {
+		std::cerr << "FAILED TO PROCESS MESSAGE: " << e.what() << std::endl;
+	}
+}
+
+void Window::Close()
+{
+	std::cerr << "Marked window to close" << std::endl;
+	wantsToClose = true;
 }
 
 void Window::SetWindowName(const LPCWSTR& windowName) {
