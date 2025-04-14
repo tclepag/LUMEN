@@ -1,5 +1,0 @@
-<Project>
-	<PropertyGroup>
-		<OutputPath>$(ExecutableOutputPath)</OutputPath>
-	</PropertyGroup>
-</Project>

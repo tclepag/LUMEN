@@ -1,6 +1,0 @@
-﻿<Project>
-	<PropertyGroup>
-		<BaseOutputPath>$(OutDir)</BaseOutputPath>
-		<ExecutableOutputPath>$(BaseOutputPath)Bin</ExecutableOutputPath>
-	</PropertyGroup>
-</Project>

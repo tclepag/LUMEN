@@ -1,0 +1,3 @@
+﻿<Project>
+	<Import Project="lumen.Build.targets"/>
+</Project>

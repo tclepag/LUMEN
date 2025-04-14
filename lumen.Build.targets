@@ -1,0 +1,15 @@
+﻿<Project>
+	<Target Name="CopyLumenDllsToOutDir" AfterTargets="Build">
+		<!-- Collect all DLLs from the lumen folder and its subfolders -->
+		<ItemGroup>
+			<LumenDlls Include="$(SolutionDir)lumen\**\*.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(LumenDlls)" DestinationFolder="$(OutDir)" />
+
+		<!-- Collect all files from the thirdparty directory and its subfolders -->
+		<ItemGroup>
+			<LumenTp Include="$(SolutionDir)lumen\thirdparty\**\*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(LumenTp)" DestinationFolder="$(OutDir)\thirdparty" />
+	</Target>
+</Project>
