@@ -156,11 +156,10 @@
     <ClInclude Include="include\core\gfx_device.h" />
     <ClInclude Include="Include\Core\Mono.h" />
     <ClInclude Include="include\core\window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="content\lua\test.lua">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
+    <ClInclude Include="include\plugins\lua_class.h" />
+    <ClInclude Include="include\plugins\lua_class_plugin.h" />
+    <ClInclude Include="include\plugins\lua_plugin.h" />
+    <ClInclude Include="include\plugins\plugin.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

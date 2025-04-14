@@ -78,23 +78,22 @@ int WINAPI WinMain(
    lua->push(log);
    lua->setGlobal("log");
 
+   lua_getglobal(lua->getState(), "package");
+   lua_getfield(lua->getState(), -1, "path");
+   std::string currentPath = lua_tostring(lua->getState(), -1);
+   std::string newPath = currentPath + ";./content/lua/?.lua";
+   lua_pop(lua->getState(), 1);
+   lua_pushstring(lua->getState(), newPath.c_str());
+   lua_setfield(lua->getState(), -2, "path");
+   lua_pop(lua->getState(), 1);
+
 
    // Load lua file
-   lua::LuaScript script = lua->openLua("content/lua/test.lua");
+   lua::LuaScript script = lua->openLua("content/lua/autorun/test_autorun.lua");
    // Load and execute it
    script.load();
    script.execute();
 
-
-   // Get hello function from it
-   lua::LuaValue value = lua->getGlobal("Hello");
-   // Convert to function
-   lua::LuaFunction* func = value.get<lua::LuaFunction*>();
-   // Run it
-   int returnValue = func->call<int>();
-
-
-   OutputDebugStringA(("Return Value: " + std::to_string(returnValue) + "\n").c_str());
    std::cout << "Hello World!\n";
 
    while (window->Alive()) {

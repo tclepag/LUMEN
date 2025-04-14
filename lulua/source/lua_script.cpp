@@ -17,7 +17,8 @@ namespace lua {
         lua_rawgeti(l->getState(), LUA_REGISTRYINDEX, scriptRef); // Get our script by reference
         // Call it now
         if (lua_pcall(l->getState(), 0, LUA_MULTRET, 0) != LUA_OK) {
-            throw std::runtime_error(lua_tostring(l->getState(), -1));
+            const char* err = lua_tostring(l->getState(), -1);
+            throw std::runtime_error(err);
         }
     }
 }
